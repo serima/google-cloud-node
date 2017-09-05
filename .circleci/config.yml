@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: node:4
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-npm-deps-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          key: v1-npm-deps-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run: npm test
